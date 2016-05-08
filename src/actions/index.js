@@ -172,7 +172,7 @@ export function loginUserRequest() {
 export function logout() {
     localStorage.removeItem('token');
     return {
-        type: LOGOUT_USER
+      type: LOGOUT_USER
     }
 }
 
@@ -215,7 +215,7 @@ export function loginUser(username, password, redirect="/") {
             })
             .catch(error => {
                console.log(error);
-                dispatch(loginUserFailure(error));
+               dispatch(loginUserFailure(error));
             })
     }
 }

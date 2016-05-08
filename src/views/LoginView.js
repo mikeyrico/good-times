@@ -4,10 +4,6 @@ import * as actionCreators from '../actions';
 import React, { PropTypes, Component} from 'react';
 
 export class LoginView extends React.Component {
-  // static contextTypes = {
-  //   router: PropTypes.object
-  // }
-
   constructor(props) {
     super(props);
     const redirectRoute = '/protected';
@@ -55,15 +51,6 @@ export class LoginView extends React.Component {
     );
   }
 }
-
-// Login.propTypes = {
-//   username: PropTypes.string,
-//   user_id: PropTypes.number,
-//   password: PropTypes.string,
-//   isAuthenticating: PropTypes.bool,
-//   statusText: PropTypes.string,
-//   redirectTo: PropTypes.string
-// }
 
 const mapStateToProps = (state) => ({
   isAuthenticating: state.auth.isAuthenticating,
