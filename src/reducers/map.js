@@ -1,7 +1,7 @@
 import {
   CHANGE_ROUTES,
   RECEIVE_ROUTES
-} from '../constants/ActionTypes';
+} from '../constants';
 
 const initialState = {
   directions: null,

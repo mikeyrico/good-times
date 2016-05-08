@@ -3,7 +3,7 @@ import {
   DELETE_FROM_BUILDER,
   REORDER_UP,
   REORDER_DOWN
-} from '../constants/ActionTypes'
+} from '../constants'
 import {
   changingRoutes
 } from '../actions'

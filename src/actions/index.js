@@ -8,21 +8,23 @@ export function initApp() {
   };
 }
 
-function receiveActivities(activities) {
+export function receiveActivities(activities) {
   return {
     type: types.RECEIVE_ACTIVITIES,
-    activities
-  };
+    payload: {
+      activities: activities
+    }
+  }
 }
 
-function receiveRoutes(route) {
+export function receiveRoutes(route) {
   return {
     type: types.RECEIVE_ROUTES,
     directions: route
   };
 }
 
-function changeRoutes(route) {
+export function changeRoutes(route) {
   return {
     type: types.CHANGE_ROUTES,
     directions: route
@@ -80,7 +82,9 @@ export function addToBuilder(activity) {
 export function deleteFromBuilder(activity) {
   return {
     type: types.DELETE_FROM_BUILDER,
-    activity
+    payload: {
+      activity: activity
+    }
   };
 }
 
@@ -154,6 +158,7 @@ export function loginUserSuccess(token) {
 
 export function loginUserFailure(error) {
   localStorage.removeItem('token');
+  console.log(error);
   return {
     type: LOGIN_USER_FAILURE,
     payload: {
@@ -181,7 +186,7 @@ export function logout() {
 export function logoutAndRedirect() {
     return (dispatch, state) => {
         dispatch(logout());
-        dispatch(pushState(null, '/login'));
+        dispatch(pushState(null, '/'));
     }
 }
 
@@ -205,17 +210,25 @@ export function loginUser(username, password, redirect="/") {
                     dispatch(loginUserSuccess(response.data[0]));
                     dispatch(pushState(null, redirect));
                 } catch (e) {
+                    console.log(e);
                     dispatch(loginUserFailure({
                         response: {
-                            status: 403,
-                            statusText: 'Invalid token'
+                          status: 403,
+                          statusText: 'Invalid token'
                         }
                     }));
                 }
             })
             .catch(error => {
-               console.log(error);
-               dispatch(loginUserFailure(error));
+               console.log('>>>>', error);
+               let response = {
+                status: 400,
+                statusText: error
+               };
+               let resError = Object.assign({}, {
+                response: response
+              });
+               dispatch(loginUserFailure(resError));
             })
     }
 }
