@@ -222,8 +222,8 @@ export function loginUser(username, password, redirect="/") {
             .catch(error => {
                console.log('>>>>', error);
                let response = {
-                status: 400,
-                statusText: error
+                status: 401,
+                statusText: `Unauthorized`
                };
                let resError = Object.assign({}, {
                 response: response
