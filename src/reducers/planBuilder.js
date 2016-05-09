@@ -21,10 +21,11 @@ export default createReducer(initialState, {
     var newState = state.activities.slice();
     newState.push(payload.activity);
     changingRoutes(newState);
-    return newState;
+    // return newState;
     // var newState = state.activities.concat[[payload.activity]];
-    // return Object.assign({}, state, {
-    //   activities: newState
+    return Object.assign({}, state, {
+      activities: newState
+    });
   },
   [DELETE_FROM_BUILDER]: (state, payload) => {
     console.log(state);

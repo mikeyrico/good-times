@@ -14,12 +14,13 @@ import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions';
+import push from 'redux-router';
 
 
 class PlanBuilderContainer extends Component {
-  static contextTypes = {
-    router: PropTypes.object
-  }
+  // static contextTypes = {
+  //   router: PropTypes.object
+  // }
 
   constructor(props) {
     super(props);
@@ -35,17 +36,19 @@ class PlanBuilderContainer extends Component {
   }
 
   goToConfirm() {
-    this.context.router.push('/confirmation');
+    dispatch(push('/confirmation'));
   }
 
   render() {
     const { planBuilder, activities } = this.props;
-    const hasActivities = planBuilder.length > 0;
+    console.log(`props in planbuilder: planBuilder:`, planBuilder);
+    console.log(`activities:`, activities);
+    const hasActivities = planBuilder.activities.length > 0;
     const nodes = !hasActivities ?
       <em>Start building your itinerary here!</em> :
       <div>
         <div>
-        {planBuilder.map(activity =>
+        {planBuilder.activities.map(activity =>
           <PlanBuilderItem
             // key={activity.lat}
             activity={activity}
@@ -91,15 +94,15 @@ class PlanBuilderContainer extends Component {
   }
 }
 
-PlanBuilderContainer.propTypes = {
-  activities: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    title: PropTypes.string.isRequired,
-    desc: PropTypes.string.isRequired,
-    city: PropTypes.string
-  })).isRequired,
-  confirmPlan: PropTypes.func.isRequired
-}
+// PlanBuilderContainer.propTypes = {
+//   activities: PropTypes.arrayOf(PropTypes.shape({
+//     id: PropTypes.number,
+//     title: PropTypes.string.isRequired,
+//     desc: PropTypes.string.isRequired,
+//     city: PropTypes.string
+//   })).isRequired,
+//   confirmPlan: PropTypes.func.isRequired
+// }
 
 const mapStateToProps = (state) => {
   return {

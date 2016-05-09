@@ -130,31 +130,33 @@ export function saveToDb(activities) {
 
 // map stuff
 export function changingRoutes(activities) {
-  const DirectionsService = new google.maps.DirectionsService();
+  return function(dispatch) {
+    const DirectionsService = new google.maps.DirectionsService();
 
-  if (activities.length === 0) {
-    return dispatch(changeRoutes(null));
+    if (activities.length === 0) {
+      return dispatch(changeRoutes(null));
+    }
+
+    var places = activities.map(function(item) {
+      return {position: {location: {lat: parseFloat(item.lat), lng: parseFloat(item.long) }}, title: item.title, address: [item.address, item.city, item.state].join(', ') };
+    });
+
+    DirectionsService.route(
+      {
+        origin: places[0].address,
+        destination: places[places.length-1].address,
+        waypoints: places.slice(1,-1).map((item) => item.position),
+        optimizeWaypoints: false,
+        travelMode: google.maps.TravelMode.WALKING,
+      }, (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          return dispatch(changeRoutes(result));
+        } else {
+          console.error(`error fetching directions ${ result }`);
+          return dispatch(changeRoutes(null));
+        }
+    });
   }
-
-  var places = activities.map(function(item) {
-    return {position: {location: {lat: parseFloat(item.lat), lng: parseFloat(item.long) }}, title: item.title, address: [item.address, item.city, item.state].join(', ') };
-  });
-
-  DirectionsService.route(
-    {
-      origin: places[0].address,
-      destination: places[places.length-1].address,
-      waypoints: places.slice(1,-1).map((item) => item.position),
-      optimizeWaypoints: false,
-      travelMode: google.maps.TravelMode.WALKING,
-    }, (result, status) => {
-      if (status === google.maps.DirectionsStatus.OK) {
-        return dispatch(changeRoutes(result));
-      } else {
-        console.error(`error fetching directions ${ result }`);
-        return dispatch(changeRoutes(null));
-      }
-  });
 }
 
 
