@@ -43,7 +43,9 @@ class PlanBuilderContainer extends Component {
     const { planBuilder, activities } = this.props;
     console.log(`props in planbuilder: planBuilder:`, planBuilder);
     console.log(`activities:`, activities);
-    const hasActivities = planBuilder.activities.length > 0;
+    console.log('actions:', this.props.actions);
+    console.log('state', this.state);
+    const hasActivities = Array.from(planBuilder.activities).length > 0;
     const nodes = !hasActivities ?
       <em>Start building your itinerary here!</em> :
       <div>
@@ -53,14 +55,16 @@ class PlanBuilderContainer extends Component {
             // key={activity.lat}
             activity={activity}
             openSnackbar={this.props.openSnackbar}
-            onDeleteFromBuilderClicked={() => this.props.deleteFromBuilder(activity)}
+            onDeleteFromBuilderClicked={() => this.props.actions.deleteFromBuilder(activity)}
             onMoveUpClicked={() => {
-              this.props.reorderUp(activities.indexOf(activity));
-              changingRoutes(activities);
+              var indexOfActivity = planBuilder.activities.indexOf(activity);
+              console.log(indexOfActivity);
+              this.props.actions.reorderUp(indexOfActivity);
+              changingRoutes(planBuilder.activities);
             }}
             onMoveDownClicked={() => {
-              this.props.reorderDown(activities.indexOf(activity));
-              changingRoutes(activities);
+              this.props.actions.reorderDown(planBuilder.activities.indexOf(activity));
+              changingRoutes(planBuilder.activities);
             }}/>
         )}
         </div>

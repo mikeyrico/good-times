@@ -110,15 +110,19 @@ export function confirmPlan(activities) {
 export function reorderUp(activityIndex) {
   return {
     type: REORDER_UP,
-    activityIndex
-  }
+    payload: {
+      activityIndex: activityIndex
+    }
+  };
 }
 
 export function reorderDown(activityIndex) {
   return {
     type: REORDER_DOWN,
-    activityIndex,
-  }
+    payload: {
+      activityIndex: activityIndex
+    }
+  };
 }
 
 export function saveToDb(activities) {

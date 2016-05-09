@@ -16,8 +16,8 @@ const initialState = {
 
 export default createReducer(initialState, {
   [ADD_TO_BUILDER]: (state, payload) => {
-    console.log('state:',state);
-    console.log('activities',state.activities);
+    // console.log('state:',state);
+    // console.log('activities',state.activities);
     var newState = state.activities.slice();
     newState.push(payload.activity);
     changingRoutes(newState);
@@ -29,34 +29,46 @@ export default createReducer(initialState, {
   },
   [DELETE_FROM_BUILDER]: (state, payload) => {
     console.log(state);
-    var newState = state.slice();
-    var activityIndex = state.indexOf(payload.action.activity);
+    var newState = state.activities.slice();
+    var activityIndex = state.activites.indexOf(payload.activity);
     newState.splice(activityIndex, 1);
     if (newState.length > 0) {
       changingRoutes(newState);
     }
-    return newState;
+    return Object.assign({}, state, {
+      activities: newState
+      });
   },
   [REORDER_UP]: (state, payload) => {
-    if (payload.action.activityIndex === 0) {
+    console.log('payload in reordering up:', payload);
+    if (payload.activityIndex === 0) {
       return state;
     } else {
-      var newState = state.slice();
-      var index = payload.action.activityIndex;
-      var newIndex = payload.action.activityIndex - 1;
+      var newState = state.activities.slice();
+      var index = payload.activityIndex;
+      var newIndex = payload.activityIndex - 1;
       newState[index] = newState.splice(newIndex, 1, newState[index])[0];
-      return newState;
+      console.log('newstate in reordering up is:', newState);
+      return Object.assign({}, state, {
+        activities: newState
+      });
+      // return [
+      //   ...this.state.slice(0, index)
+      // ];
     }
   },
   [REORDER_DOWN]: (state, payload) => {
-    if (action.activityIndex === state.length - 1) {
+    console.log('payload in reordering down:', payload);
+    if (payload.activityIndex === state.length - 1) {
       return state;
     } else {
-      var newState = state.slice();
-      var index = action.activityIndex;
-      var newIndex = action.activityIndex + 1;
+      var newState = state.activities.slice();
+      var index = payload.activityIndex;
+      var newIndex = payload.activityIndex + 1;
       newState[index] = newState.splice(newIndex, 1, newState[index])[0];
-      return newState;
+      return Object.assign({}, state, {
+        activities: newState
+      });
     }
   },
 })
