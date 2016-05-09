@@ -28,19 +28,22 @@ export default createReducer(initialState, {
     });
   },
   [DELETE_FROM_BUILDER]: (state, payload) => {
-    console.log(state);
+    // console.log('payload in deleting from builder is:', payload);
+    // console.log('state:',state);
+    // console.log('activities',state.activities);
     var newState = state.activities.slice();
-    var activityIndex = state.activites.indexOf(payload.activity);
+    var activityIndex = state.activities.indexOf(payload.activity);
+    // console.log(activityIndex);
     newState.splice(activityIndex, 1);
     if (newState.length > 0) {
       changingRoutes(newState);
     }
     return Object.assign({}, state, {
       activities: newState
-      });
+    });
   },
   [REORDER_UP]: (state, payload) => {
-    console.log('payload in reordering up:', payload);
+    // console.log('payload in reordering up:', payload);
     if (payload.activityIndex === 0) {
       return state;
     } else {
@@ -58,7 +61,7 @@ export default createReducer(initialState, {
     }
   },
   [REORDER_DOWN]: (state, payload) => {
-    console.log('payload in reordering down:', payload);
+    // console.log('payload in reordering down:', payload);
     if (payload.activityIndex === state.length - 1) {
       return state;
     } else {
