@@ -5,11 +5,11 @@ import * as actionCreators from '../actions';
 import CreateActivity from '../components/CreateActivity';
 import ActivityItem from '../components/ActivityItem';
 import ActivitiesList from '../components/ActivityList';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 import FlatButton from 'material-ui/FlatButton';
 
-
-export class ActivitiesContainer extends Component {
+class ActivitiesContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,26 +25,35 @@ export class ActivitiesContainer extends Component {
 
   render() {
     const { activities } = this.props;
-    // console.log('>>>activities:,', activities.activities);
-    var that = this;
+    const hasActivities = activities.length > 0;
+    const nodes = !hasActivities ?
+      <em>Start building your itinerary here!</em> :
+      <div>
+        <div>
+        {activities.map(activity =>
+          <ActivityItem
+            // key={activity.lat}
+            activity={activity}
+            onAddToBuilderClicked={() => {
+              this.props.addToBuilder(activity) }}/>
+        )}
+        </div>
+      </div>
+
 
     return (
       <div className="col-md-6">
-
-        <CreateActivity
-          modal={this.state.modalOpen}
-          toggleModal={this.toggleModal.bind(this)}
-          addFromCreate={(created) => this.props.addToBuilder(created)}/>
-        <ActivitiesList title="Activities">
-        <FlatButton label="Create New Activity" onClick={this.toggleModal.bind(this)} />
-          {activities.activities.map((activity, i) =>
-            <ActivityItem
-              key={i}
-              activity={activity}
-              onAddToBuilderClicked={() => this.props.addToBuilder(activity)}
-            />
-          )}
-        </ActivitiesList>
+        <Card>
+          <CreateActivity
+            modal={this.state.modalOpen}
+            toggleModal={this.toggleModal.bind(this)}
+            addFromCreate={(created) => this.props.addToBuilder(created)}/>
+          <h3 style={{marginLeft: 15}}>Activities</h3>
+          <FlatButton
+            label="Create New Activity"
+            onClick={this.toggleModal.bind(this)} />
+          {nodes}
+        </Card>
       </div>
     )
   }
@@ -60,7 +69,7 @@ export class ActivitiesContainer extends Component {
 //   addToBuilder: PropTypes.func.isRequired
 // }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     activities: state.activities,
     planBuilder: state.planBuilder
@@ -75,3 +84,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ActivitiesContainer);
+

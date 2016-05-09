@@ -196,7 +196,7 @@ export function logout() {
 export function logoutAndRedirect() {
     return (dispatch, state) => {
         dispatch(logout());
-        dispatch(pushState(null, '/'));
+        dispatch(push('/'));
     }
 }
 
@@ -218,7 +218,7 @@ export function loginUser(username, password, redirect="/") {
                 console.log('response token is:', response.data[0]);
                 try {
                     dispatch(loginUserSuccess(response.data[0]));
-                    dispatch(pushState(null, redirect));
+                    dispatch(push(redirect));
                 } catch (e) {
                     console.log(e);
                     dispatch(loginUserFailure({
@@ -276,7 +276,7 @@ export function fetchProtectedData(token) {
     //         .catch(error => {
     //             if(error.response.status === 401) {
     //               dispatch(loginUserFailure(error));
-    //               dispatch(pushState(null, '/login'));
+    //               dispatch(push('/login'));
     //             }
     //         })
     //    }

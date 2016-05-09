@@ -3,8 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions';
 import ActivitiesContainer from '../containers/ActivitiesContainer';
-import FilterContainer from '../components/ActivityItem';
-import PlanBuilderContainer from '../components/ActivityList';
+import FilterContainer from '../containers/Filter';
+import PlanBuilderContainer from '../containers/PlanBuilder';
 
 export class ActivitiesView extends React.Component {
   render() {

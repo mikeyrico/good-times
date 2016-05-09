@@ -1,6 +1,6 @@
 import {createReducer} from '../utils';
 import {LOGIN_USER_REQUEST, LOGIN_USER_SUCCESS, LOGIN_USER_FAILURE, LOGOUT_USER} from '../constants';
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 
 
 const initialState = {

@@ -1,32 +1,98 @@
-import React, { Component, PropTypes } from 'react';
-import FlatButton from 'material-ui/FlatButton';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
+import * as React from 'react';
+import { GoogleMapLoader, GoogleMap, Marker, DirectionsRenderer } from "react-google-maps";
+import { changingRoutes } from '../actions';
+import { connect } from 'react-redux';
 
-export default class FilterContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      drawerOpen: false
-    };
-  }
 
-  toggleDrawer() {
-    this.setState({
-      drawerOpen: !this.state.drawerOpen
-    });
+export default class Maps extends React.Component {
+
+  componentDidMount() {
+    const { activities } = this.props;
+    if (activities.length > 0) {
+      changingRoutes(activities);
+    }
   }
 
   render() {
+    const { directions } = this.props;
+
+    var markers = [{position: {lat: parseFloat(this.props.lat), lng: parseFloat(this.props.long) }, title: this.props.title }];
+
+    var centerLat = 37.7749;
+    var centerLng = -122.4194;
+
+    if (this.props.lat && this.props.long) {
+      centerLat = parseFloat(this.props.lat);
+      centerLng = parseFloat(this.props.long);
+    }
+
     return (
-      <div>
-        <FlatButton label="Filter" onClick={this.toggleDrawer.bind(this)} />
-        <Drawer open={this.state.drawerOpen}>
-          <FlatButton label="Close Filter" onClick={this.toggleDrawer.bind(this)} />
-          <MenuItem>Menu Item</MenuItem>
-          <MenuItem>Menu Item 2</MenuItem>
-        </Drawer>
+      <div className={styles[this.props.size].divClass}>
+        <section style={styles[this.props.size].mapSize}>
+          <GoogleMapLoader
+            containerElement={
+              <div
+                {...this.props}
+                style={styles[this.props.size].mapPosition}
+              />
+            }
+            googleMapElement={
+              <GoogleMap
+                defaultZoom={12}
+                defaultCenter={{lat: centerLat, lng: centerLng}}>
+                  {markers.map((marker, index) => {
+                    return (
+                      <Marker
+                        key={ index }
+                        title={ marker.title }
+                        {...marker} />
+                    );
+                  })}
+                  { directions && !this.props.lat ? <DirectionsRenderer directions={directions} /> : null}
+              </GoogleMap>
+            }
+          />
+        </section>
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    activities: state.planBuilder,
+    directions: state.directions
+  }
+}
+
+var styles = {
+  large: {
+    mapSize: {
+      height: "500px",
+      width: "500px"
+    },
+    mapPosition: {
+      height: "100%",
+      width: "100%",
+      position: "absolute"
+    },
+    divClass: "col-md-8"
+  },
+  small: {
+    mapSize: {
+      height: "400px",
+      width: "550px"
+    },
+    mapPosition: {
+      height: "100%",
+      width: "100%"
+      // position: "absolute"
+    },
+    divClass: "col-md-4"
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  { changingRoutes }
+)(Maps)

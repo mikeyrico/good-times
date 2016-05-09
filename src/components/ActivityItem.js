@@ -45,10 +45,10 @@ export class ActivityItem extends React.Component {
     // const { activity } = this.props;
     // this.props;
     return (
-      <Card>
+      <Card style={{marginLeft: 10, marginRight: 10, marginBottom: 10}}>
         <CardHeader
           title={this.state.activity.title}
-          subtitle={this.state.activity.neighborhood}
+          subtitle={this.state.activity.neighborhood.join(', ')}
           actAsExpander={true}
           showExpandableButton={true}
         />
