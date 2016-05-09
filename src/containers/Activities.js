@@ -24,6 +24,7 @@ class ActivitiesContainer extends Component {
 
   render() {
     const { activities } = this.props;
+    console.log(activities);
     var that = this;
 
     return (

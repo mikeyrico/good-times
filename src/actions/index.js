@@ -1,6 +1,23 @@
 import { checkHttpStatus, parseJSON } from '../utils';
-import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER, FETCH_PROTECTED_DATA_REQUEST, RECEIVE_PROTECTED_DATA} from '../constants';
-import { pushState } from 'redux-router';
+import {
+  ADD_TO_BUILDER,
+  DELETE_FROM_BUILDER,
+  RECEIVE_ACTIVITIES,
+  RECEIVE_YELPS,
+  CONFIRM_REQUEST,
+  REORDER_UP,
+  REORDER_DOWN,
+  SAVE_TO_DB,
+  CHANGE_ROUTES,
+  RECEIVE_ROUTES,
+  LOGIN_USER_REQUEST,
+  LOGIN_USER_FAILURE,
+  LOGIN_USER_SUCCESS,
+  LOGOUT_USER,
+  FETCH_PROTECTED_DATA_REQUEST,
+  RECEIVE_PROTECTED_DATA
+} from '../constants';
+import { push } from 'redux-router';
 
 export function initApp() {
   return dispatch => {
@@ -10,7 +27,7 @@ export function initApp() {
 
 export function receiveActivities(activities) {
   return {
-    type: types.RECEIVE_ACTIVITIES,
+    type: RECEIVE_ACTIVITIES,
     payload: {
       activities: activities
     }
@@ -19,69 +36,70 @@ export function receiveActivities(activities) {
 
 export function receiveRoutes(route) {
   return {
-    type: types.RECEIVE_ROUTES,
+    type: RECEIVE_ROUTES,
     directions: route
   };
 }
 
 export function changeRoutes(route) {
   return {
-    type: types.CHANGE_ROUTES,
+    type: CHANGE_ROUTES,
     directions: route
   };
 }
 
 export function getAllActivities(query) {
-
+  return (dispatch) => {
     fetch(`/api/yelpSearch?city=${query.city}&category=${query.category}`, {
-      method: 'GET'
-    })
-    .then((results) => results.json())
-    .then((data) =>
-       data.map((activity) => {
-         let transformed = Object.create(null);
-
-         // transformed.yelpRating = activity.rating;
-         transformed.title = activity.name;
-         transformed.category = activity.categories[0];
-         transformed.desc = activity.snippet_text;
-         transformed.lat = activity.location.coordinate.latitude;
-         transformed.long = activity.location.coordinate.longitude;
-         transformed.address = activity.location.address[0];
-         transformed.city = activity.location.city;
-         transformed.state = activity.location.state_code;
-         transformed.neighborhood = activity.location.neighborhoods;
-         transformed.added = false;
-         // TODO: cannot figure out how to pull a single item from neighborhood array, will have to be handled on client side
-
-         return transformed;
-       }))
-    .then((yelpData) => {
-      console.log('yelpData: ', yelpData);
-      return fetch('https://sleepy-crag-32675.herokuapp.com/v1/activities', {
         method: 'GET'
       })
-      .then((dbResults) => dbResults.json())
-      .then((dbJson) => dbJson.data.map((item) => Object.assign(item, {added: false})))
-      .then((dbArray) => dbArray.concat(yelpData))
-      .then((dbActivities) => {
-        store.dispatch(receiveActivities(dbActivities));
-        dispatch(push('/activities'));
+      .then((results) => results.json())
+      .then((data) =>
+         data.map((activity) => {
+           let transformed = Object.create(null);
+
+           // transformed.yelpRating = activity.rating;
+           transformed.title = activity.name;
+           transformed.category = activity.categories[0];
+           transformed.desc = activity.snippet_text;
+           transformed.lat = activity.location.coordinate.latitude;
+           transformed.long = activity.location.coordinate.longitude;
+           transformed.address = activity.location.address[0];
+           transformed.city = activity.location.city;
+           transformed.state = activity.location.state_code;
+           transformed.neighborhood = activity.location.neighborhoods;
+           transformed.added = false;
+           // TODO: cannot figure out how to pull a single item from neighborhood array, will have to be handled on client side
+
+           return transformed;
+         }))
+      .then((yelpData) => {
+        console.log('yelpData: ', yelpData);
+        return fetch('https://sleepy-crag-32675.herokuapp.com/v1/activities', {
+          method: 'GET'
+        })
+        .then((dbResults) => dbResults.json())
+        .then((dbJson) => dbJson.data.map((item) => Object.assign(item, {added: false})))
+        .then((dbArray) => dbArray.concat(yelpData))
+        .then((dbActivities) => {
+          dispatch(receiveActivities(dbActivities));
+          dispatch(push('/activities'));
+        })
       })
-    })
     .catch(e => console.log(e));
+  }
 }
 
 export function addToBuilder(activity) {
   return {
-    type: types.ADD_TO_BUILDER,
+    type: ADD_TO_BUILDER,
     activity
   };
 }
 
 export function deleteFromBuilder(activity) {
   return {
-    type: types.DELETE_FROM_BUILDER,
+    type: DELETE_FROM_BUILDER,
     payload: {
       activity: activity
     }
@@ -90,28 +108,28 @@ export function deleteFromBuilder(activity) {
 
 export function confirmPlan(activities) {
   return {
-    type: types.CONFIRM_REQUEST,
+    type: CONFIRM_REQUEST,
     activities
   };
 }
 
 export function reorderUp(activityIndex) {
   return {
-    type: types.REORDER_UP,
+    type: REORDER_UP,
     activityIndex
   }
 }
 
 export function reorderDown(activityIndex) {
   return {
-    type: types.REORDER_DOWN,
+    type: REORDER_DOWN,
     activityIndex,
   }
 }
 
 export function saveToDb(activities) {
   return {
-    type: types.SAVE_TO_DB,
+    type: SAVE_TO_DB,
     activities
   };
 }
@@ -121,7 +139,7 @@ export function changingRoutes(activities) {
   const DirectionsService = new google.maps.DirectionsService();
 
   if (activities.length === 0) {
-    return store.dispatch(changeRoutes(null));
+    return dispatch(changeRoutes(null));
   }
 
   var places = activities.map(function(item) {
@@ -137,10 +155,10 @@ export function changingRoutes(activities) {
       travelMode: google.maps.TravelMode.WALKING,
     }, (result, status) => {
       if (status === google.maps.DirectionsStatus.OK) {
-        return store.dispatch(changeRoutes(result));
+        return dispatch(changeRoutes(result));
       } else {
         console.error(`error fetching directions ${ result }`);
-        return store.dispatch(changeRoutes(null));
+        return dispatch(changeRoutes(null));
       }
   });
 }
