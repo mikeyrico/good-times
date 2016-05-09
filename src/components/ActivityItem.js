@@ -19,6 +19,15 @@ export class ActivityItem extends React.Component {
     };
   }
 
+  componentWillMount() {
+    console.log('state',this.state.activity);
+    console.log('props', this.props.activity);
+    this.setState({
+      activity: this.props.activity
+    });
+    console.log('state again',this.state.activity);
+  }
+
   toggleModal() {
     this.setState({
       modalOpen: !this.state.modalOpen
@@ -38,18 +47,18 @@ export class ActivityItem extends React.Component {
     return (
       <Card>
         <CardHeader
-          title={this.props.activity.title}
-          subtitle={this.props.activity.neighborhood}
+          title={this.state.activity.title}
+          subtitle={this.state.activity.neighborhood}
           actAsExpander={true}
           showExpandableButton={true}
         />
         <FlatButton
           onClick={this.clickAddButton.bind(this)}
-          disabled={this.props.activity.added ? true : false}
-          label={this.props.activity.added ? 'Added' : 'Add to itinerary'} />
+          disabled={this.state.activity.added ? true : false}
+          label={this.state.activity.added ? 'Added' : 'Add to itinerary'} />
         <img src='../assets/open.png' onClick={this.toggleModal.bind(this)} />
         <CardText expandable={true}>
-          {this.props.activity.desc}
+          {this.state.activity.desc}
         </CardText>
         <Modal
           isOpen={this.state.modalOpen}
@@ -61,7 +70,7 @@ export class ActivityItem extends React.Component {
                   onClick={this.toggleModal.bind(this)}
                   label="Close Map" />
               </div>
-              <Maps size="small" lat={this.props.activity.lat} long={this.props.activity.long} title={this.props.activity.title} />
+              <Maps size="small" lat={this.state.activity.lat} long={this.state.activity.long} title={this.state.activity.title} />
             </div>
           </div>
         </Modal>
