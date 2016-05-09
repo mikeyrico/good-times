@@ -1,16 +1,21 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as actionCreators from '../actions';
+
 import Modal from 'react-modal';
 import Maps from './Maps';
 import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 
-export default class ActivityItem extends Component {
+export class ActivityItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modalOpen: false,
-      buttonClicked: false
+      buttonClicked: false,
+      activity: {}
     };
   }
 
@@ -28,23 +33,23 @@ export default class ActivityItem extends Component {
   }
 
   render() {
-    const { activity } = this.props;
-
+    // const { activity } = this.props;
+    // this.props;
     return (
       <Card>
         <CardHeader
-          title={activity.title}
-          subtitle={activity.neighborhood}
+          title={this.props.activity.title}
+          subtitle={this.props.activity.neighborhood}
           actAsExpander={true}
           showExpandableButton={true}
         />
         <FlatButton
           onClick={this.clickAddButton.bind(this)}
-          disabled={activity.added ? true : false}
-          label={activity.added ? 'Added' : 'Add to itinerary'} />
-        <img src='../../assets/open.png' onClick={this.toggleModal.bind(this)} />
+          disabled={this.props.activity.added ? true : false}
+          label={this.props.activity.added ? 'Added' : 'Add to itinerary'} />
+        <img src='../assets/open.png' onClick={this.toggleModal.bind(this)} />
         <CardText expandable={true}>
-          {activity.desc}
+          {this.props.activity.desc}
         </CardText>
         <Modal
           isOpen={this.state.modalOpen}
@@ -56,7 +61,7 @@ export default class ActivityItem extends Component {
                   onClick={this.toggleModal.bind(this)}
                   label="Close Map" />
               </div>
-              <Maps size="small" lat={activity.lat} long={activity.long} title={activity.title} />
+              <Maps size="small" lat={this.props.activity.lat} long={this.props.activity.long} title={this.props.activity.title} />
             </div>
           </div>
         </Modal>
@@ -65,14 +70,26 @@ export default class ActivityItem extends Component {
   }
 }
 
-ActivityItem.propTypes = {
-  activity: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    desc: PropTypes.string.isRequired,
-    city: PropTypes.string.isRequired,
-  }).isRequired,
-  onAddToBuilderClicked: PropTypes.func.isRequired
-}
+const mapStateToProps = (state) => ({
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actionCreators, dispatch)
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ActivityItem);
+
+// ActivityItem.propTypes = {
+//   activity: React.PropTypes.shape({
+//     title: React.PropTypes.string.isRequired,
+//     desc: React.PropTypes.string.isRequired,
+//     city: React.PropTypes.string.isRequired,
+//   }).isRequired,
+//   onAddToBuilderClicked: React.PropTypes.func.isRequired
+// }
 
 const customStyles = {
   content : {

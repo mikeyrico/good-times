@@ -1,6 +1,9 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actionCreators from '../actions';
 
-export default class ActivitiesList extends Component {
+export class ActivitiesList extends React.Component {
   render() {
     return (
       <div>
@@ -11,7 +14,19 @@ export default class ActivitiesList extends Component {
   }
 }
 
-ActivitiesList.propTypes = {
-  children: PropTypes.node,
-  title: PropTypes.string.isRequired
-}
+// ActivitiesList.propTypes = {
+//   children: React.PropTypes.node,
+//   title: PropTypes.string.isRequired
+// }
+
+const mapStateToProps = (state) => ({
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actionCreators, dispatch)
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ActivitiesList);

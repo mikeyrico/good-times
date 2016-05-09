@@ -12,7 +12,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 // import {orange500, blue500} from 'material-ui/styles/colors';
 
-export default class Search extends React.Component {
+export class Search extends React.Component {
   // static contextTypes = {
   //   router: React.PropTypes.object
   // }
