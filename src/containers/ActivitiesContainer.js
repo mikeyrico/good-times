@@ -24,18 +24,21 @@ class ActivitiesContainer extends Component {
   }
 
   render() {
+    // console.log(this.props);
     const { activities } = this.props;
-    const hasActivities = activities.length > 0;
+    let allActivities = activities.activities;
+    console.log('allActivities: >>', allActivities);
+    const hasActivities = allActivities.length > 0;
     const nodes = !hasActivities ?
       <em>Start building your itinerary here!</em> :
       <div>
         <div>
-        {activities.map(activity =>
+        {allActivities.map(activity =>
           <ActivityItem
             // key={activity.lat}
             activity={activity}
             onAddToBuilderClicked={() => {
-              this.props.addToBuilder(activity) }}/>
+              this.props.actions.addToBuilder(activity) }}/>
         )}
         </div>
       </div>
@@ -47,7 +50,7 @@ class ActivitiesContainer extends Component {
           <CreateActivity
             modal={this.state.modalOpen}
             toggleModal={this.toggleModal.bind(this)}
-            addFromCreate={(created) => this.props.addToBuilder(created)}/>
+            addFromCreate={(created) => this.props.actions.addToBuilder(created)}/>
           <h3 style={{marginLeft: 15}}>Activities</h3>
           <FlatButton
             label="Create New Activity"

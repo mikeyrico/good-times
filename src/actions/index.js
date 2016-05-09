@@ -85,7 +85,9 @@ export function getAllActivities(query) {
 export function addToBuilder(activity) {
   return {
     type: ADD_TO_BUILDER,
-    activity
+    payload: {
+      activity: activity
+    }
   };
 }
 

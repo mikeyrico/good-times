@@ -10,6 +10,8 @@ import PlanBuilderItem from '../components/PlanBuilderItem';
 import Maps from '../components/Maps'; //TODO: needs updating
 import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import { bindActionCreators } from 'redux';
+import * as actionCreators from '../actions';
 
 class PlanBuilderContainer extends Component {
   // static contextTypes = {
@@ -21,6 +23,7 @@ class PlanBuilderContainer extends Component {
   }
 
   render() {
+    console.log(this.props);
     const { activities } = this.props;
 
     const hasActivities = activities.length > 0;
@@ -28,9 +31,9 @@ class PlanBuilderContainer extends Component {
       <em>Start building your itinerary here!</em> :
       <div>
         <div>
-        {activities.map(activity =>
+        {activities.map((activity, i) =>
           <PlanBuilderItem
-            // key={activity.lat}
+            key={i}
             activity={activity}
             onDeleteFromBuilderClicked={() => this.props.deleteFromBuilder(activity)}
             onMoveUpClicked={() => {
@@ -77,11 +80,16 @@ class PlanBuilderContainer extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    activities: state.planBuilder,
+    activities: state.planBuilder ? state.planBuilder : [],
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actionCreators, dispatch)
+});
+
+
 export default connect(
   mapStateToProps,
-  { confirmPlan, deleteFromBuilder, reorderUp, reorderDown, changingRoutes }
-)(PlanBuilderContainer)
+  mapDispatchToProps
+)(PlanBuilderContainer);

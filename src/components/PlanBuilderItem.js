@@ -14,6 +14,7 @@ export default class PlanBuilderItem extends Component {
         <CardHeader
           title={activity.title}
           subtitle={activity.neighborhood}
+          key={activity.i}
           actAsExpander={true}
           showExpandableButton={true}
         />

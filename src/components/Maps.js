@@ -2,6 +2,8 @@ import * as React from 'react';
 import { GoogleMapLoader, GoogleMap, Marker, DirectionsRenderer } from "react-google-maps";
 import { changingRoutes } from '../actions';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actionCreators from '../actions';
 
 
 export default class Maps extends React.Component {
@@ -65,6 +67,10 @@ const mapStateToProps = (state) => {
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actionCreators, dispatch)
+});
+
 var styles = {
   large: {
     mapSize: {
@@ -94,5 +100,5 @@ var styles = {
 
 export default connect(
   mapStateToProps,
-  { changingRoutes }
+  mapDispatchToProps
 )(Maps)
