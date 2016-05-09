@@ -6,6 +6,11 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 
 export default class PlanBuilderItem extends Component {
+  removeItem() {
+    this.props.openSnackbar("Event has been removed from your itinerary");
+    this.props.onDeleteFromBuilderClicked();
+  }
+
   render() {
     const { activity } = this.props;
 
@@ -18,7 +23,7 @@ export default class PlanBuilderItem extends Component {
           actAsExpander={true}
           showExpandableButton={true}
         />
-        <ContentRemoveCircle onClick={this.props.onDeleteFromBuilderClicked}/>
+        <ContentRemoveCircle onClick={this.removeItem.bind(this)}/>
         <FlatButton
           label="Up"
           onClick={this.props.onMoveUpClicked} />

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions';
 
-import Modal from 'react-modal';
+import Dialog from 'material-ui/Dialog';
 import Maps from './Maps';
 import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
@@ -60,9 +60,10 @@ export class ActivityItem extends React.Component {
         <CardText expandable={true}>
           {this.state.activity.desc}
         </CardText>
-        <Modal
-          isOpen={this.state.modalOpen}
-          style={customStyles} >
+         <Dialog
+          open={this.state.modalOpen}
+          modal={true}
+          style={customContentStyle} >
           <div className="container">
             <div className="row">
               <div>
@@ -73,7 +74,7 @@ export class ActivityItem extends React.Component {
               <Maps size="small" lat={this.state.activity.lat} long={this.state.activity.long} title={this.state.activity.title} />
             </div>
           </div>
-        </Modal>
+        </Dialog>
       </Card>
     )
   }
@@ -100,13 +101,7 @@ export default connect(
 //   onAddToBuilderClicked: React.PropTypes.func.isRequired
 // }
 
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
+const customContentStyle = {
+  width: '60%',
+  maxWidth: 'none'
 };

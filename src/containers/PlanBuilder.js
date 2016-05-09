@@ -1,40 +1,55 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { confirmPlan,
-         deleteFromBuilder,
-         reorderUp,
-         reorderDown,
-         changingRoutes } from '../actions';
-// import { buildPlanner } from '../../redux/reducers';
+        addToBuilder,
+        deleteFromBuilder,
+        reorderUp,
+        reorderDown,
+        changingRoutes } from '../actions';
+import { buildPlanner } from '../reducers';
 import PlanBuilderItem from '../components/PlanBuilderItem';
-import Maps from '../components/Maps'; //TODO: needs updating
+import CreateActivity from '../components/CreateActivity';
+import Maps from '../components/Maps';
 import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions';
 
+
 class PlanBuilderContainer extends Component {
-  // static contextTypes = {
-  //   router: PropTypes.object
-  // }
+  static contextTypes = {
+    router: PropTypes.object
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalOpen: false
+    };
+  }
+
+  toggleModal() {
+    this.setState({
+      modalOpen: !this.state.modalOpen
+    });
+  }
 
   goToConfirm() {
-    dispatch(push('/confirmation'));
+    this.context.router.push('/confirmation');
   }
 
   render() {
-    console.log(this.props);
-    const { activities } = this.props;
-
-    const hasActivities = activities.length > 0;
+    const { planBuilder, activities } = this.props;
+    const hasActivities = planBuilder.length > 0;
     const nodes = !hasActivities ?
       <em>Start building your itinerary here!</em> :
       <div>
         <div>
-        {activities.map((activity, i) =>
+        {planBuilder.map(activity =>
           <PlanBuilderItem
-            key={i}
+            // key={activity.lat}
             activity={activity}
+            openSnackbar={this.props.openSnackbar}
             onDeleteFromBuilderClicked={() => this.props.deleteFromBuilder(activity)}
             onMoveUpClicked={() => {
               this.props.reorderUp(activities.indexOf(activity));
@@ -48,12 +63,20 @@ class PlanBuilderContainer extends Component {
         </div>
       </div>
     return (
-     <div className="col-md-6">
-        <div className="row" style={{marginBottom: 10}}>
+      <div className="col-md-6">
+        <div className="row" style={{marginBottom: 10}}>>
           <Maps size="small" />
         </div>
         <Card>
           <h3 style={{marginLeft: 15}}>Itinerary</h3>
+          <CreateActivity
+            modal={this.state.modalOpen}
+            toggleModal={this.toggleModal.bind(this)}
+            openSnackbar={this.props.openSnackbar}
+            addFromCreate={(created) => this.props.addToBuilder(created)}/>
+          <FlatButton
+            label="Create Own Activity"
+            onClick={this.toggleModal.bind(this)} /><br />
           {nodes}
           <div style={{marginBottom: 10}}>
             <FlatButton
@@ -68,19 +91,20 @@ class PlanBuilderContainer extends Component {
   }
 }
 
-// PlanBuilderContainer.propTypes = {
-//   activities: PropTypes.arrayOf(PropTypes.shape({
-//     id: PropTypes.number,
-//     title: PropTypes.string.isRequired,
-//     desc: PropTypes.string.isRequired,
-//     city: PropTypes.string
-//   })).isRequired,
-//   confirmPlan: PropTypes.func.isRequired
-// }
+PlanBuilderContainer.propTypes = {
+  activities: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string.isRequired,
+    desc: PropTypes.string.isRequired,
+    city: PropTypes.string
+  })).isRequired,
+  confirmPlan: PropTypes.func.isRequired
+}
 
 const mapStateToProps = (state) => {
   return {
-    activities: state.planBuilder ? state.planBuilder : [],
+    planBuilder: state.planBuilder,
+    activities: state.activities
   }
 }
 

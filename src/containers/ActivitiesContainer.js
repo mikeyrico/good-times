@@ -37,6 +37,7 @@ class ActivitiesContainer extends Component {
           <ActivityItem
             // key={activity.lat}
             activity={activity}
+            openSnackBar={this.props.openSnackBar}
             onAddToBuilderClicked={() => {
               this.props.actions.addToBuilder(activity) }}/>
         )}

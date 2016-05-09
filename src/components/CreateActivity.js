@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Modal from 'react-modal';
+import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 // import GOOGLE_API_KEY from '../../config/googlePlaces'
 
+import Toggle from 'material-ui/Toggle';
 import Geosuggest from 'react-geosuggest/module/Geosuggest';
 
 export default class CreateActivity extends Component {
@@ -19,7 +20,8 @@ export default class CreateActivity extends Component {
       address: '',
       desc: '',
       lat: '',
-      long: ''
+      long: '',
+      private: false
     };
   }
 
@@ -69,6 +71,10 @@ export default class CreateActivity extends Component {
     this.setState({desc: event.target.value});
   }
 
+  handlePrivate() {
+    this.setState({private: this.state.private});
+  }
+
   onSuggestSelect(place) {
     console.log(place);
     var address = place.gmaps.formatted_address.split(', ').join('\n');
@@ -84,8 +90,7 @@ export default class CreateActivity extends Component {
 
   }
 
-  addEvent() {
-
+  addNewEvent() {
     var activity = {
       title: this.state.title,
       address: this.state.address,
@@ -93,21 +98,25 @@ export default class CreateActivity extends Component {
       lat: this.state.lat,
       long: this.state.long,
       category: 'personal',
+      private: this.state.private,
       added: true
     }
     this.props.addFromCreate(activity);
     this.props.toggleModal();
+    this.props.openSnackbar("Event has been created");
 }
 
   render() {
 
     return (
-      <Modal
-        isOpen={this.props.modal}
-        style={customStyles} >
+       <Dialog
+        open={this.props.modal}
+        modal={true}
+        contentStyle={customContentStyle}
+        autoScrollBodyContent={true}
+        style={customContentStyle} >
         <div className="container">
           <div className="row">
-            <img src='../../assets/close.png' onClick={this.toggleModal.bind(this)} />
             <h2>Create your own activity</h2>
 
             <form style={{textAlign: "left", marginTop: 10}} className="commentForm">
@@ -147,25 +156,24 @@ export default class CreateActivity extends Component {
                 value={this.state.address}
                 style={{marginBottom: 25}} /><br />
 
-              <FlatButton label="Add to itinerary" onClick={this.addEvent.bind(this)}/>
-
+              <Toggle
+                label="Private"
+                labelPosition="right"
+                onToggle={this.handlePrivate.bind(this)}
+                defaultToggled={false} />
+              <FlatButton
+                label="Add to itinerary"
+                onClick={this.addNewEvent.bind(this)}/>
+              <img src='../../assets/close.png' onClick={this.toggleModal.bind(this)} />
            </form>
           </div>
         </div>
-      </Modal>
+      </Dialog>
     )
   }
 }
 
-
-const customStyles = {
-  content : {
-    position: 'absolute',
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
+const customContentStyle = {
+  width: '60%',
+  maxWidth: 'none'
 };
