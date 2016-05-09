@@ -27,8 +27,6 @@ export class Search extends React.Component {
 
   searchActivities(event) {
     event.preventDefault();
-    // console.log(this.context.router);
-    // TODO: refactor below
     this.props.actions.getAllActivities({city: this.state.city, category: this.state.category});
   }
 

@@ -14,7 +14,7 @@ import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions';
-import push from 'redux-router';
+import { push } from 'redux-router';
 
 
 class PlanBuilderContainer extends Component {
@@ -36,6 +36,8 @@ class PlanBuilderContainer extends Component {
   }
 
   goToConfirm() {
+    const { dispatch } = this.props;
+    console.log('dispatch is', dispatch);
     dispatch(push('/confirmation'));
   }
 
@@ -115,9 +117,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actionCreators, dispatch)
-});
+const mapDispatchToProps = (dispatch) => {
+  return { actions: bindActionCreators(actionCreators, dispatch)};
+}
 
 
 export default connect(

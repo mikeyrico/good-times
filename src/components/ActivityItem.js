@@ -15,17 +15,17 @@ export class ActivityItem extends React.Component {
     this.state = {
       modalOpen: false,
       buttonClicked: false,
-      activity: {}
+      // activity: {}
     };
   }
 
   componentWillMount() {
-    console.log('state',this.state.activity);
-    console.log('props', this.props.activity);
-    this.setState({
-      activity: this.props.activity
-    });
-    console.log('state again',this.state.activity);
+    // console.log('state',this.state.activity);
+    // console.log('props', this.props.activity);
+    // this.setState({
+    //   activity: this.props.activity
+    // });
+    // console.log('state again',this.state.activity);
   }
 
   toggleModal() {
@@ -42,23 +42,23 @@ export class ActivityItem extends React.Component {
   }
 
   render() {
-    // const { activity } = this.props;
-    // this.props;
+    const { activity } = this.props;
+    console.log('activity in activity item is:', activity);
     return (
       <Card style={{marginLeft: 10, marginRight: 10, marginBottom: 10}}>
         <CardHeader
-          title={this.state.activity.title}
-          subtitle={this.state.activity.neighborhood.join(', ')}
+          title={activity.title}
+          subtitle={activity.neighborhood.join(', ')}
           actAsExpander={true}
           showExpandableButton={true}
         />
         <FlatButton
           onClick={this.clickAddButton.bind(this)}
-          disabled={this.state.activity.added ? true : false}
-          label={this.state.activity.added ? 'Added' : 'Add to itinerary'} />
+          disabled={activity.added ? true : false}
+          label={activity.added ? 'Added' : 'Add to itinerary'} />
         <img src='../assets/open.png' onClick={this.toggleModal.bind(this)} />
         <CardText expandable={true}>
-          {this.state.activity.desc}
+          {activity.desc}
         </CardText>
          <Dialog
           open={this.state.modalOpen}
@@ -71,7 +71,7 @@ export class ActivityItem extends React.Component {
                   onClick={this.toggleModal.bind(this)}
                   label="Close Map" />
               </div>
-              <Maps size="small" lat={this.state.activity.lat} long={this.state.activity.long} title={this.state.activity.title} />
+              <Maps size="small" lat={activity.lat} long={activity.long} title={activity.title} />
             </div>
           </div>
         </Dialog>
