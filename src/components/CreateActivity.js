@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
@@ -14,12 +15,31 @@ export default class CreateActivity extends Component {
     super(props);
     this.state = {
       modalOpen: false,
-      name: '',
+      title: '',
       address: '',
-      city: '',
-      state: ''
+      desc: '',
+      lat: '',
+      long: ''
     };
   }
+
+  /* The following gets the user's location to optimize autocomplete search*/
+  // componentWillMount() {
+  //   navigator.geolocation.getCurrentPosition(function(pos) {
+  //     this.setState({
+  //       lat: pos.coords.latitude,
+  //       long: pos.coords.longitude
+  //     })
+  //     console.log(this.state.lat);
+  //     console.log(this.state.long);
+  //   }, function(err) {
+  //     // else error grabbing location, just return SF's coords
+  //     this.setState({
+  //       lat: 37.7749295,
+  //       long: -122.41941550000001
+  //     })
+  //   });
+  // }
 
   componentDidMount() {
     if (this.props.open) {
@@ -37,25 +57,47 @@ export default class CreateActivity extends Component {
     this.props.toggleModal();
   }
 
-  handleName(event) {
-    this.setState({name: event.target.value});
+  handleTitle(event) {
+    this.setState({title: event.target.value});
   }
 
   handleAddress(event) {
     this.setState({address: event.target.value});
   }
 
-  handleCity(event) {
-    this.setState({city: event.target.value});
+  handleDesc(event) {
+    this.setState({desc: event.target.value});
   }
 
-  handleState(event) {
-    this.setState({state: event.target.value});
+  onSuggestSelect(place) {
+    console.log(place);
+    var address = place.gmaps.formatted_address.split(', ').join('\n');
+
+    var lat = place.location.lat;
+    var long = place.location.lng;
+
+    this.setState({
+      address: address,
+      lat: lat,
+      long: long
+    })
+
   }
 
-  onSuggestSelect(suggest) {
-    console.log(suggest);
-  }
+  addEvent() {
+
+    var activity = {
+      title: this.state.title,
+      address: this.state.address,
+      desc: this.state.desc,
+      lat: this.state.lat,
+      long: this.state.long,
+      category: 'personal',
+      added: true
+    }
+    this.props.addFromCreate(activity);
+    this.props.toggleModal();
+}
 
   render() {
 
@@ -65,93 +107,47 @@ export default class CreateActivity extends Component {
         style={customStyles} >
         <div className="container">
           <div className="row">
-            <img src='../assets/close.png' onClick={this.toggleModal.bind(this)} />
+            <img src='../../assets/close.png' onClick={this.toggleModal.bind(this)} />
             <h2>Create your own activity</h2>
 
-            <Geosuggest
-              className="geosuggest"
-              placeholder="Start typing!"
-              initialValue="San Francisco"
-              onSuggestSelect={this.onSuggestSelect}
-              location={new google.maps.LatLng(53.558572, 9.9278215)}
-              radius="20" />
-            <form style={{textAlign: "left", marginTop: 10}} className="commentForm" onSubmit={this.addEvent.bind(this)}>
+            <form style={{textAlign: "left", marginTop: 10}} className="commentForm">
+              Title: <br />
               <TextField
-                id="text-field-controlled"
+                className="text-field"
+                id="name-field"
                 type="text"
-                value={this.state.name}
-                placeholder="Name"
-                style={{marginBottom: 25}}
-                onChange={this.handleName.bind(this)} /><br />
-              <TextField
-                id="text-field-controlled"
-                type="text"
-                value={this.state.address}
-                placeholder="Address"
-                style={{marginBottom: 25}}
-                onChange={this.handleAddress.bind(this)} /><br />
-              <TextField
-                id="text-field-controlled"
-                type="text"
-                value={this.state.city}
-                placeholder="City"
-                style={{marginBottom: 25}}
-                onChange={this.handleCity.bind(this)} /><br />
-              <SelectField value={this.state.state} onChange={this.handleState.bind(this)}>
-                <MenuItem value="AL" primaryText="Alabama" />
-                <MenuItem value="AK" primaryText="Alaska" />
-                <MenuItem value="AZ" primaryText="Arizona" />
-                <MenuItem value="AR" primaryText="Arkansas" />
-                <MenuItem value="CA" primaryText="California" />
-                <MenuItem value="CO" primaryText="Colorado" />
-                <MenuItem value="CT" primaryText="Connecticut" />
-                <MenuItem value="DE" primaryText="Delaware" />
-                <MenuItem value="DC" primaryText="District Of Columbia" />
-                <MenuItem value="FL" primaryText="Florida" />
-                <MenuItem value="GA" primaryText="Georgia" />
-                <MenuItem value="HI" primaryText="Hawaii" />
-                <MenuItem value="ID" primaryText="Idaho" />
-                <MenuItem value="IL" primaryText="Illinois" />
-                <MenuItem value="IN" primaryText="Indiana" />
-                <MenuItem value="IA" primaryText="Iowa" />
-                <MenuItem value="KS" primaryText="Kansas" />
-                <MenuItem value="KY" primaryText="Kentucky" />
-                <MenuItem value="LA" primaryText="Louisiana" />
-                <MenuItem value="ME" primaryText="Maine" />
-                <MenuItem value="MD" primaryText="Maryland" />
-                <MenuItem value="MA" primaryText="Massachusetts" />
-                <MenuItem value="MI" primaryText="Michigan" />
-                <MenuItem value="MN" primaryText="Minnesota" />
-                <MenuItem value="MS" primaryText="Mississippi" />
-                <MenuItem value="MO" primaryText="Missouri" />
-                <MenuItem value="MT" primaryText="Montana" />
-                <MenuItem value="NE" primaryText="Nebraska" />
-                <MenuItem value="NV" primaryText="Nevada" />
-                <MenuItem value="NH" primaryText="New Hampshire" />
-                <MenuItem value="NJ" primaryText="New Jersey" />
-                <MenuItem value="NM" primaryText="New Mexico" />
-                <MenuItem value="NY" primaryText="New York" />
-                <MenuItem value="NC" primaryText="North Carolina" />
-                <MenuItem value="ND" primaryText="North Dakota" />
-                <MenuItem value="OH" primaryText="Ohio" />
-                <MenuItem value="OK" primaryText="Oklahoma" />
-                <MenuItem value="OR" primaryText="Oregon" />
-                <MenuItem value="PA" primaryText="Pennsylvania" />
-                <MenuItem value="RI" primaryText="Rhode Island" />
-                <MenuItem value="SC" primaryText="South Carolina" />
-                <MenuItem value="SD" primaryText="South Dakota" />
-                <MenuItem value="TN" primaryText="Tennessee" />
-                <MenuItem value="TX" primaryText="Texas" />
-                <MenuItem value="UT" primaryText="Utah" />
-                <MenuItem value="VT" primaryText="Vermont" />
-                <MenuItem value="VA" primaryText="Virginia" />
-                <MenuItem value="WA" primaryText="Washington" />
-                <MenuItem value="WV" primaryText="West Virginia" />
-                <MenuItem value="WI" primaryText="Wisconsin" />
-                <MenuItem value="WY" primaryText="Wyoming" />
-              </SelectField><br />
-              <FlatButton label="Submit" type="submit"/>
+                onChange={this.handleTitle.bind(this)}
+                placeholder="Friend's Place"
+                style={{marginBottom: 25}} /><br />
 
+              Description: <br />
+              <TextField
+                className="text-field"
+                id="desc-field"
+                type="text"
+                onChange={this.handleDesc.bind(this)}
+                placeholder="Dinner party"
+                style={{marginBottom: 25}} /><br />
+
+              Address: <br />
+              <Geosuggest
+                className="geosuggest"
+                placeholder="123 Grove St."
+                onSuggestSelect={this.onSuggestSelect.bind(this)}
+                location={new google.maps.LatLng(37.7749295, -122.41941550000001)}
+                radius="20" />
+
+              <TextField
+                className="text-field"
+                id="address-field"
+                disabled={true}
+                multiLine={true}
+                rows={4}
+                onChange={this.handleAddress.bind(this)}
+                value={this.state.address}
+                style={{marginBottom: 25}} /><br />
+
+              <FlatButton label="Add to itinerary" onClick={this.addEvent.bind(this)}/>
 
            </form>
           </div>

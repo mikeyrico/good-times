@@ -51,41 +51,33 @@ export function changeRoutes(route) {
 export function getAllActivities(query) {
   return (dispatch) => {
     fetch(`/api/yelpSearch?city=${query.city}&category=${query.category}`, {
-        method: 'GET'
-      })
-      .then((results) => results.json())
-      .then((data) =>
-         data.map((activity) => {
-           let transformed = Object.create(null);
+      method: 'GET'
+    })
+    .then((results) => results.json())
+    .then((data) =>
+       data.map((activity) => {
+         let transformed = Object.create(null);
 
-           // transformed.yelpRating = activity.rating;
-           transformed.title = activity.name;
-           transformed.category = activity.categories[0];
-           transformed.desc = activity.snippet_text;
-           transformed.lat = activity.location.coordinate.latitude;
-           transformed.long = activity.location.coordinate.longitude;
-           transformed.address = activity.location.address[0];
-           transformed.city = activity.location.city;
-           transformed.state = activity.location.state_code;
-           transformed.neighborhood = activity.location.neighborhoods;
-           transformed.added = false;
-           // TODO: cannot figure out how to pull a single item from neighborhood array, will have to be handled on client side
+         // transformed.yelpRating = activity.rating;
+         transformed.title = activity.name;
+         transformed.category = activity.categories[0];
+         transformed.desc = activity.snippet_text;
+         transformed.lat = activity.location.coordinate.latitude;
+         transformed.long = activity.location.coordinate.longitude;
+         transformed.address = activity.location.address[0];
+         transformed.city = activity.location.city;
+         transformed.state = activity.location.state_code;
+         transformed.neighborhood = activity.location.neighborhoods;
+         transformed.added = false;
 
-           return transformed;
-         }))
-      .then((yelpData) => {
-        console.log('yelpData: ', yelpData);
-        return fetch('https://sleepy-crag-32675.herokuapp.com/v1/activities', {
-          method: 'GET'
-        })
-        .then((dbResults) => dbResults.json())
-        .then((dbJson) => dbJson.data.map((item) => Object.assign(item, {added: false})))
-        .then((dbArray) => dbArray.concat(yelpData))
-        .then((dbActivities) => {
-          dispatch(receiveActivities(dbActivities));
-          dispatch(push('/activities'));
-        })
-      })
+         return transformed;
+       }))
+    .then((dbActivities) =>
+      dispatch(receiveActivities(dbActivities))
+    )
+    .then(() => {
+      dispatch(push('/activities'));
+    })
     .catch(e => console.log(e));
   }
 }
