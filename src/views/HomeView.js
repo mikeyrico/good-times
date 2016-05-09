@@ -9,7 +9,6 @@ export default class HomeView extends React.Component {
             <div>
                 <h1>GoodTimes</h1>
                 <p><Link to='/activities'>My smooth moves</Link></p>
-                <Search />
             </div>
         );
     }

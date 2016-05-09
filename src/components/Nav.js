@@ -1,6 +1,5 @@
 import React, { PropTypes, Component } from 'react';
 
-import Title from './Title';
 import Login from './Login';
 
 export default class Nav extends Component {

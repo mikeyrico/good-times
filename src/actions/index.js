@@ -31,7 +31,7 @@ export function changeRoutes(route) {
   };
 }
 
-export function getAllActivities(query, router) {
+export function getAllActivities(query) {
 
     fetch(`/api/yelpSearch?city=${query.city}&category=${query.category}`, {
       method: 'GET'
@@ -66,7 +66,7 @@ export function getAllActivities(query, router) {
       .then((dbArray) => dbArray.concat(yelpData))
       .then((dbActivities) => {
         store.dispatch(receiveActivities(dbActivities));
-        router.push('/activities');
+        dispatch(push('/activities'));
       })
     })
     .catch(e => console.log(e));
