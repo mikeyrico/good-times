@@ -6,8 +6,8 @@ import { confirmPlan,
          reorderDown,
          changingRoutes } from '../actions';
 // import { buildPlanner } from '../../redux/reducers';
-import PlanBuilderItem from './PlanBuilderItem';
-import Maps from '../Helpers/Maps'; //TODO: needs updating
+import PlanBuilderItem from '../components/PlanBuilderItem';
+import Maps from '../components/Maps'; //TODO: needs updating
 import FlatButton from 'material-ui/FlatButton';
 
 class PlanBuilderContainer extends Component {
@@ -16,7 +16,7 @@ class PlanBuilderContainer extends Component {
   // }
 
   goToConfirm() {
-    this.context.router.push('/confirmation');
+    // this.context.router.push('/confirmation');
   }
 
   render() {

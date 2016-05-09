@@ -1,9 +1,9 @@
 import React from 'react';
-import {Navbar, NavBrand, Nav, NavItem} from 'react-bootstrap';
-import {Link} from 'react-router';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {logoutAndRedirect} from '../actions';
+import { Navbar, NavBrand, Nav, NavItem } from 'react-bootstrap';
+import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { logoutAndRedirect } from '../actions';
 
 // import '../styles/core.scss';
 
@@ -27,7 +27,7 @@ export default class CoreLayout extends React.Component {
                         </div>
                         <div id="navbar">
                             <ul className="nav navbar-nav navbar-right">
-                                <li><Link to="/protected">Profile</Link></li>
+                                <li><Link to="/profile">Profile</Link></li>
                                 <li><Link to="/login">Login</Link></li>
                                 {this.props.isAuthenticated
                                  ? <li><a href='#' onClick={() => this.props.dispatch(logoutAndRedirect())}>Logout</a> </li>

@@ -14,25 +14,25 @@ const intitialState = {
 };
 
 
-export default createReducer(initialState, {
-  [ADD_TO_BUILDER]: (state, payload) => {
-    return Object.assign({}, state, {
-      activities: state.activities.concat[payload.activity];
-    });
-  },
-  [DELETE_FROM_BUILDER]: (state, payload) => {
-    return Object.assign({}, state, {
-    });
-  },
-  [REORDER_UP]: (state, payload) => {
-    return Object.assign({}, state, {
-    });
-  },
-  [REORDER_DOWN]: (state, payload) => {
-    return Object.assign({}, state, {
-    });
-  },
-})
+// export default createReducer(initialState, {
+//   [ADD_TO_BUILDER]: (state, payload) => {
+//     return Object.assign({}, state, {
+//       activities: state.activities.concat[payload.activity];
+//     });
+//   },
+//   [DELETE_FROM_BUILDER]: (state, payload) => {
+//     return Object.assign({}, state, {
+//     });
+//   },
+//   [REORDER_UP]: (state, payload) => {
+//     return Object.assign({}, state, {
+//     });
+//   },
+//   [REORDER_DOWN]: (state, payload) => {
+//     return Object.assign({}, state, {
+//     });
+//   },
+// })
 
 // export function planBuilder(state = [], action) {
 //   switch (action.type) {

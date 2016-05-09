@@ -6,7 +6,7 @@ import React, { PropTypes, Component} from 'react';
 export class LoginView extends React.Component {
   constructor(props) {
     super(props);
-    const redirectRoute = '/protected';
+    const redirectRoute = this.props.location.query.next || '/';
     this.state = {
       username: '',
       password: '',

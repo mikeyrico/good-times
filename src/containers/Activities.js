@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { addToBuilder, changingRoutes } from '../constants';
-import CreateActivity from './CreateActivity';
-import ActivityItem from './ActivityItem';
-import ActivitiesList from './ActivitiesList';
+import { addToBuilder, changingRoutes } from '../actions';
+import CreateActivity from '../components/CreateActivity';
+import ActivityItem from '../components/ActivityItem';
+import ActivitiesList from '../components/ActivitiesList';
 
 import FlatButton from 'material-ui/FlatButton';
 
